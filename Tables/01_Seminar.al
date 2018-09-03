@@ -8,10 +8,25 @@ fields
 field(10;"No.";Code[20])
 {
 Caption='No.';
+trigger OnValidate();
+
+begin
+    if "No." <> xRec."No." then begin
+SeminarSetup.GET;
+NoSeriesMgt.TestManual(SeminarSetup."Seminar Nos.");
+"No. Series" := '';
+end;
+end;
 }
 field(20;Name;Text[50])
 {
 Caption='Name';
+trigger OnValidate();
+begin
+    if ("Search Name"=UpperCase(xRec.Name)) or
+    ("Search Name"='') then
+    "Search Name":=Name;
+end;
 }
 field(30;"Seminar Duration";Decimal)
 {
@@ -57,6 +72,15 @@ field(110;"Gen. Prod. Posting Group";code[10])
 {
 Caption='Gen. Prod. Posting Group';
 TableRelation = "Gen. Product Posting Group";
+trigger OnValidate();
+begin
+if (xRec."Gen. Prod. Posting Group"<>
+"Gen. Prod. Posting Group") then begin
+if GenProdPostingGroup.ValidateVatProdPostingGroup
+(GenProdPostingGroup,"Gen. Prod. Posting Group") then
+Validate("VAT Prod. Posting Group",
+GenProdPostingGroup."Def. VAT Prod. Posting Group");    
+end;
 }
 field(120;"VAT Prod. Posting Group";code[10])
 {
@@ -80,4 +104,33 @@ key(Key1;"Search Name")
 {
 }
 }
+var
+SeminarSetup : Record "CSD Seminar Setup";
+Seminar : Record "CSD Seminar";
+GenProdPostingGroup : Record  "Gen. Product Posting Group";
+NoSeriesMGt : Codeunit NoSeriesManagement;
+
+trigger OnInsert();
+    begin
+        If "No." = '' THEN begin
+            SeminarSetup.Get;
+            SeminarSetup.TestField("Seminar Nos.");
+            NoSeriesMGt.InitSeries(SeminarSetup."Seminar Nos.",xRec."No.",0D,"No.","No. Series");
+
+        end;
+end;
+trigger OnModify();
+    begin
+    "Last Date Modified" := TODAY;
+    end;
+
+trigger OnDelete();
+begin
+ //CommentLine.Reset;
+//CommentLine.SetRange("Table Name",
+//CommentLine."Table Name"::Seminar);
+//CommentLine.SetRange("No.","No.");
+// CommentLine.DeleteAll;
+end;
 }
+
