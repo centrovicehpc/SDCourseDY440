@@ -3,9 +3,21 @@ pageextension 123456702 "CSD ResourceExtList" extends "Resource List"
 {
     layout
     {
-        // Add changes to page layout here
-    }
-
+        modify(Type)
+        {
+            Visible = ShowType;
+        }
+        addafter(Type)
+        {
+            field("CSD Maximum Participants"; "CSD Maximum Participants")
+        {
+         } 
+            field("CSD Resourcetype"; "CSD Resourcetype")
+           { 
+                Visible = ShowmaxField;
+            } 
+       }    
+}
     actions
     {
         // Add changes to page actions here
@@ -14,11 +26,21 @@ pageextension 123456702 "CSD ResourceExtList" extends "Resource List"
     var
        [InDataSet]
        ShowType:Boolean;
+       ShowMaxField:Boolean;
 
        trigger OnOpenPage();
+       
        begin
-           FilterGroup(3)
-           ShowType := 
-                   
+           FilterGroup(3);
+           ShowType := (GetFilter(type)= '');
+
+            ShowMaxField := (GetFilter(Type) =
+            
+                Format(Type::Machine));
+
+            FilterGroup(0);
+
+
+
        end;
 }
