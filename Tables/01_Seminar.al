@@ -80,6 +80,7 @@ if GenProdPostingGroup.ValidateVatProdPostingGroup
 (GenProdPostingGroup,"Gen. Prod. Posting Group") then
 Validate("VAT Prod. Posting Group",
 GenProdPostingGroup."Def. VAT Prod. Posting Group");    
+end
 end;
 }
 field(120;"VAT Prod. Posting Group";code[10])
@@ -131,6 +132,17 @@ begin
 //CommentLine."Table Name"::Seminar);
 //CommentLine.SetRange("No.","No.");
 // CommentLine.DeleteAll;
+end;
+
+procedure AssistEdit() :Boolean;
+
+begin
+    with Seminar do begin Seminar:=Rec; 
+    SeminarSetup.get; SeminarSetup.TestField("Seminar Nos."); 
+    if NoSeriesMgt.SelectSeries(SeminarSetup."Seminar Nos." ,xRec."No. Series","No. Series") then begin 
+        NoSeriesMgt.SetSeries("No."); Rec:=Seminar; exit(true); 
+        end; 
+    end;
 end;
 }
 
