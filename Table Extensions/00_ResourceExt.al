@@ -1,4 +1,4 @@
-tableextension 123456701 "CSD ResourceExt"  extends Resource
+tableextension 123456700 "CSD ResourceExt"  extends Resource
 // CSD 00 D.E Veloper
 {
     fields
