@@ -329,6 +329,10 @@ Caption =' Seminar Registration Headder';
         "Document Date" := WORKDATE;
         SeminarSetup.GET;
         NoSeriesMgt.SetDefaultSeries("Posting No. Series",SeminarSetup."Posted Seminar Reg. Nos.");
+        if GetFilter("Seminar No.") <> '' then
+            if GetRangeMin("Seminar No.") = GetRangeMax("Seminar No.")
+                then 
+                Validate("Seminar No.",GetRangeMin("Seminar No."));
     end;
 
     procedure AssistEdit(OldSeminarRegHeader : Record "CSD Seminar Reg. Header") : Boolean;
